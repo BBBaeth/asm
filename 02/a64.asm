@@ -3,6 +3,8 @@ bits 64
 global _main
 
 section .data
+message: db " ",10
+.len: equ $ - message
 
 section .text
 
@@ -11,22 +13,35 @@ _exit:
 	mov	rdi, 0
 	syscall
 
-_loop:
-	pop rsi
-	cmp r8, 0 ; do we have > 0 arguments
-	jle	_exit ; if no quit
-
+_write:
 	mov	rax, 0x2000004
+	mov rsi, rdi
 	mov rdi, 1
-	pop rsi
-	mov rdx, 10
+	mov rdx, message.len
+	syscall
+	mov	rax, 0x2000004
+	mov rsi, message
+	mov rdi, 1
+	mov rdx, message.len
 	syscall
 
-	dec r8
-	pop r8 ; get argc
-	jmp _loop
+
+	ret
 
 _main:
-	pop r8 ; get argc
-	pop rsi ; remove first argument (program name) by popping one first
-	jmp _loop
+
+	push	rdi                     ; save registers
+	push	rsi
+	sub		rsp, 8                  ; align stack before call
+
+	mov		rdi, [rsi]              ; the argument string to display
+	call	_write
+
+	add		rsp, 8                  ; restore %rsp to pre-aligned value
+	pop		rsi                     ; restore registers
+	pop		rdi
+
+	add		rsi, 8                  ; point to next argument
+	dec		rdi                     ; count down
+	jnz		_main                    ; if not done counting keep going
+	jmp		_exit
