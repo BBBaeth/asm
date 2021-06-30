@@ -3,7 +3,7 @@ bits 64
 global _main
 
 section .data
-message: db " ",10
+message: db 10
 .len: equ $ - message
 
 section .text
@@ -14,34 +14,32 @@ _exit:
 	syscall
 
 _write:
-	mov	rax, 0x2000004
-	mov rsi, rdi
-	mov rdi, 1
+	mov	rax, 0x2000004 ; write
+	mov rdi, 1 ; stdout
+	mov rsi, [rsi] ; get the argument itself
 	mov rdx, message.len
 	syscall
+
 	mov	rax, 0x2000004
 	mov rsi, message
 	mov rdi, 1
 	mov rdx, message.len
 	syscall
 
-
 	ret
 
 _main:
 
+	add		rsi, 8                  ; argv - point to next argument
+	dec		rdi                     ; argc - count down - remove path
 	push	rdi                     ; save registers
-	push	rsi
-	sub		rsp, 8                  ; align stack before call
+	push	rsi                     ; bcs write will overwrite them
 
-	mov		rdi, [rsi]              ; the argument string to display
 	call	_write
 
-	add		rsp, 8                  ; restore %rsp to pre-aligned value
 	pop		rsi                     ; restore registers
-	pop		rdi
+	pop		rdi                     ; to state before write
 
-	add		rsi, 8                  ; point to next argument
-	dec		rdi                     ; count down
-	jnz		_main                    ; if not done counting keep going
+	cmp rdi, 1                      ; stop at 1 because argv[0] is path
+	jne		_main                   ; if not done counting keep going
 	jmp		_exit
