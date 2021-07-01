@@ -38,6 +38,9 @@ _write:
 
 _main:
 
+	cmp		rdi, 1                  ; do we have at least 1 arg
+	jng		_exit
+
 	add		rsi, 8                  ; argv - point to next argument
 	dec		rdi                     ; argc - count down - remove path
 	push	rdi                     ; save registers
