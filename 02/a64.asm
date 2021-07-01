@@ -13,18 +13,26 @@ _exit:
 	mov	rdi, 0
 	syscall
 
+_get_len:
+	inc rax                        ; rax++
+	cmp byte [rsi + rax], 0        ; check char arg[rax]
+	jne _get_len                   ; not null, continue parsing
+	ret                            ; else return rax (length)
+
 _write:
-	mov	rax, 0x2000004 ; write
-	mov rdi, 1 ; stdout
-	mov rsi, [rsi] ; get the argument itself
-	mov rdx, message.len
+	mov rsi, [rsi]                 ; rsi <- argv[n]
+	mov rax, -1                    ; init arg length count
+	call _get_len                  ; rax <- arg length
+	mov rdx, rax                   ; write len <- rax (arg length)
+	mov	rax, 0x2000004             ; write
+	mov rdi, 1                     ; stdout
 	syscall
 
 	mov	rax, 0x2000004
 	mov rsi, message
 	mov rdi, 1
 	mov rdx, message.len
-	syscall
+	syscall                         ; jump line between arg
 
 	ret
 
