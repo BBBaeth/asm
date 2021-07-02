@@ -36,7 +36,7 @@ $(OBJ_PATH)/%.o: $(SRCS_PATH)/%.s
 		NASM  $(NFLAGS) $< -o $@
 
 libasmtest: $(NAME) $(OBJ)
-		gcc $(FLAGS) -o libasmTest main.c $(LIB)
+		gcc $(FLAGS) -o libasmTest main.c $(NAME)
 
 clean :
 		rm -rf $(OBJ)
