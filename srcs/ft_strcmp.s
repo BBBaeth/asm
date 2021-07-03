@@ -1,27 +1,43 @@
 bits 64
 
-global _main
+global _ft_strcmp
 
 section .data
 
 section .text
 
+_error_exit:
+	mov rax, -999
+	ret
+
 _exit:
-	ret           ; return rax (len)
+	movzx rax, al    ; we want to return str1[] - str2[]
+	movzx r8, bl     ; zx puts \0 at end of register content
 
+	sub rax, r8      ; str1[n] - str2[n] / will be + if >, 0 if =, - if <
+	ret           ; return diff stocked in rax
 
-_ft_strlen:
+_strcmp_loop:
 
-	inc rax                 ;rax++
-	cmp byte [rsi + rax], 0 ; argv[1][rax] == null ?
-	jne _ft_strlen          ; not null, continue
-	jmp _exit               ; null, return
+	mov al, byte [rdi] ; al register is one byte large
+	mov bl, byte [rsi] ; bl register is one byte large
 
-_main:
+; upcoming block avoids bus error in case we are at both end
+	cmp al, byte 0
+	je _exit
+; if we are at both end we dont want rdi++ rsi++
 
-	cmp rdi, 1     ; argc > 1 ?
-	jng _exit      ; if not (path only), return
-	add	rsi, 8     ; get next argv[] bcs argv[0] is path
-	mov rsi, [rsi] ; rsi <- argv[1] instead of argv*
-	mov rax, -1    ; rax will be our i/ptr
-	jmp _ft_strlen
+	cmp al, bl
+	jne _exit          ; difference found
+
+	inc rdi            ; ptr++
+	inc rsi            ; ptr++
+	jmp _strcmp_loop
+
+_ft_strcmp:
+
+	cmp rdi, byte 0    ; does argv[1] exist ?
+	jng _error_exit
+	cmp rsi, byte 0    ; does argv[2] exist ?
+	jng _error_exit
+	jmp _strcmp_loop   ; parameters ok

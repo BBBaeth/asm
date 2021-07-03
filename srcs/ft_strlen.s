@@ -19,7 +19,7 @@ _strlen_loop:
 
 _ft_strlen:
 
-	mov rax, -1    ; rax will be our i/ptr
-	cmp rdi, byte 0
-	jle _exit
+	mov rax, -1             ; rax will be our i/ptr
+	cmp rdi, byte 0         ; argument is stored in rdi
+	jle _exit               ; if no argument return -1
 	jmp _strlen_loop
