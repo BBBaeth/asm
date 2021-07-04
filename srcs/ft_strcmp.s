@@ -6,8 +6,12 @@ section .data
 
 section .text
 
-_error_exit:
-	mov rax, -999
+_error_noarg:        ; no parameter (real strcmp would segfault)
+	mov rax, 0       ; if both parameters are missing they are equal
+	ret
+
+_error_onearg:       ; only one parameter (strcmp would segfault)
+	mov rax, 1       ; if argv[1] exists and not [2] : 1 > 2
 	ret
 
 _exit:
@@ -25,7 +29,8 @@ _strcmp_loop:
 ; upcoming block avoids bus error in case we are at both end
 	cmp al, byte 0
 	je _exit
-; if we are at both end we dont want rdi++ rsi++
+	cmp bl, byte 0
+	je _exit
 
 	cmp al, bl
 	jne _exit          ; difference found
@@ -37,7 +42,7 @@ _strcmp_loop:
 _ft_strcmp:
 
 	cmp rdi, byte 0    ; does argv[1] exist ?
-	jng _error_exit
+	jng _error_noarg
 	cmp rsi, byte 0    ; does argv[2] exist ?
-	jng _error_exit
+	jng _error_onearg
 	jmp _strcmp_loop   ; parameters ok
