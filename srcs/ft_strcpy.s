@@ -1,27 +1,31 @@
 bits 64
 
-global _main
+global _ft_strcpy
 
 section .data
 
 section .text
 
+_error_no_arg:          ; strcpy would segfault
+	mov rax, 0
+	ret
+
 _exit:
-	ret           ; return rax (len)
+	mov rax, rdi        ; strcpy returns s1
+	ret                 ; return rax <- rdi (ptr to s1)
 
+_strcpy_loop:
+	inc rax             ; rax++
+	mov cl, [rsi + rax] ; cl equivalent to al but in CX register
+	mov [rdi + rax], cl ; dst[ptr] = src[ptr]
+	cmp cl, byte 0      ; is char == \0 ?
+	je _exit            ; finished copying
+	jmp _strcpy_loop
 
-_ft_strlen:
-
-	inc rax                 ;rax++
-	cmp byte [rsi + rax], 0 ; argv[1][rax] == null ?
-	jne _ft_strlen          ; not null, continue
-	jmp _exit               ; null, return
-
-_main:
-
-	cmp rdi, 1     ; argc > 1 ?
-	jng _exit      ; if not (path only), return
-	add	rsi, 8     ; get next argv[] bcs argv[0] is path
-	mov rsi, [rsi] ; rsi <- argv[1] instead of argv*
-	mov rax, -1    ; rax will be our i/ptr
-	jmp _ft_strlen
+_ft_strcpy: ; rsi = source, rdi = dest
+	mov rax, -1  ; rax is our ptr
+;	cmp rdi, byte 0 ; does dst point somewhere ? if not nothing to cpy
+;	jng _error_no_arg
+;	cmp rsi, byte 0 ; does src exist ? if not then nothing to cpy : return null
+;	jng _error_no_arg
+	jmp _strcpy_loop
