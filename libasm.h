@@ -2,6 +2,8 @@
 # define LIBASM_H
 
 #include <unistd.h>
+#include <stdlib.h>
+#include <errno.h>
 
 ssize_t		ft_write(int, char *, size_t);
 ssize_t		ft_read(int, char *, size_t);

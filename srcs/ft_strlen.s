@@ -8,7 +8,7 @@ section .text
 
 _exit:
 
-	ret           ; return rax (len)
+	ret                     ; return rax (len)
 
 _strlen_loop:
 

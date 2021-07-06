@@ -1,8 +1,8 @@
 #include "libasm.h"
-#include "stdio.h"
-#include "string.h"
-#include <errno.h>
 
+#include <fcntl.h>
+#include <string.h>
+#include <stdio.h>
 int		main(int argc, char **argv)
 {
 	if (argc > 1 && argv && argv[2])
@@ -15,11 +15,18 @@ int		main(int argc, char **argv)
 		printf(" arg for asm : |%d|\n", ft_strcmp(argv[1], argv[2]));
 		if (argv[1] && argv[2])
 		printf(" arg for cmp : |%d|\n", strcmp(argv[1], argv[2]));
-		errno = 0;
 		printf("return asmcpy : |%s|\n", ft_strcpy(str1, str2));
-		printf(", errno : %d\n", errno);
-		errno = 0;
 		printf("return cpy: |%s|\n", strcpy(str1, str2));
-		printf(", errno : %d\n", errno);
-	return (0);
+		errno = 0;
+		ft_strdup(argv[1]);
+			printf("errno : %d\n", errno);
+//		if (duplicated_str)
+//			printf("%p : %s, errno : %d\n", duplicated_str, duplicated_str, errno);
+//		else
+//		char *duplicated_str2 = strdup("\0");
+//		if (duplicated_str2)
+//			printf("%p : %s, errno : %d\n", duplicated_str2, duplicated_str2, errno);
+//		else
+//			printf("%p, errno : %d\n", duplicated_str2, errno);
+return (0);
 }
