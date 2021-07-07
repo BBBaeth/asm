@@ -19,7 +19,6 @@ _error_malloc:
 
 	call ___error
 	mov rdi, 12      ; errno value ENONEM (Out of memory)
-	mov rdi, rbx     ; original block of memory unchanged
 	mov [rax], rdi   ; to original block
 	mov rax, 0       ; return null ptr
 	jmp _exit
