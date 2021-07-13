@@ -1,27 +1,27 @@
 bits 64
 
-global _main
+extern ___error
+
+global _ft_read
 
 section .data
 
 section .text
 
 _exit:
-	ret           ; return rax (len)
+	ret                ; ret 0>= if fine or -1 if error
 
+_error_read:
+	neg rax            ; rax holds -errno so we *-1
+	mov rdi, rax       ; rdi <- errno value to keep track of it
+	call ___error      ; error puts errno ptr in rax
+	mov [rax], rdi     ; put error nb in errno
+	mov rax, -1
+	ret
 
-_ft_strlen:
+_ft_read:
 
-	inc rax                 ;rax++
-	cmp byte [rsi + rax], 0 ; argv[1][rax] == null ?
-	jne _ft_strlen          ; not null, continue
-	jmp _exit               ; null, return
-
-_main:
-
-	cmp rdi, 1     ; argc > 1 ?
-	jng _exit      ; if not (path only), return
-	add	rsi, 8     ; get next argv[] bcs argv[0] is path
-	mov rsi, [rsi] ; rsi <- argv[1] instead of argv*
-	mov rax, -1    ; rax will be our i/ptr
-	jmp _ft_strlen
+	mov rax, 0x2000003 ; 3 = read
+	syscall            ; modifies CF (carry flag) if error
+	jc _error_read     ; condition = CF is not clear
+	jmp _exit

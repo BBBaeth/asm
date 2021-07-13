@@ -27,7 +27,7 @@ OBJ = $(addprefix $(OBJ_PATH)/,$(SRCO))
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(SRC) $(OBJ)
 		ar -rc $(NAME) $(OBJ)
 		ranlib $(NAME)
 
