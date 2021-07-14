@@ -35,7 +35,7 @@ $(OBJ_PATH)/%.o: $(SRCS_PATH)/%.s
 		@mkdir $(OBJ_PATH) 2> /dev/null || true
 		NASM  $(NFLAGS) $< -o $@
 
-libasmtest: $(NAME) $(OBJ)
+libasmtest: $(NAME) $(OBJ) main.c
 		gcc $(FLAGS) -o libasmTest main.c $(NAME)
 
 clean :

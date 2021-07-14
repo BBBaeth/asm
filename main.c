@@ -56,5 +56,28 @@ int		main(int argc, char **argv)
 	close(fd);
 	printf("ret : %d, errno : %d\n", r_ft_read, errno);
 
+// WRITE
+
+	errno = 0;
+	printf("write : %ld", write(1, "hello!\n", 5));
+	printf(", errno : %d\n", errno);
+	errno = 0;
+	printf("ft_write : %ld", ft_write(1, "hello!\n", 5));
+	printf(", errno : %d\n", errno);
+
+	errno = 0;
+	printf("write : %ld", write(1, argv[1], 12));
+	printf(", errno : %d\n", errno);
+	errno = 0;
+	printf("ft_write : %ld", ft_write(1, argv[1], 12));
+	printf(", errno : %d\n", errno);
+
+	errno = 0;
+	printf("write : %ld", write(1, argv[2], -10));
+	printf(", errno : %d\n", errno);
+	errno = 0;
+	printf("ft_write : %ld", ft_write(1, argv[2], -10));
+	printf(", errno : %d\n", errno);
+
 	return (0);
 }
